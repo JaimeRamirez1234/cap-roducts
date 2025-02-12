@@ -38,9 +38,11 @@ define service CatalogService {
             ),
             UnitOfMeasure  as ToUnitOfMeasure @mandatory,
             Currency       as ToCurrency      @mandatory,
+            Currency.ID   as CurrencyId,
             Category       as ToCategory      @mandatory,
+            Category.ID   as CategoryId,
             Category.Name  as Category        @readonly,
-            DimensionUnits as ToDiensionUnit,
+            DimensionUnits as ToDimensionUnit,
             SalesData,
             Supplier,
             Reviews,
@@ -105,7 +107,7 @@ define service CatalogService {
         };
 
     @readonly
-    entity VH_Unit           as
+    entity VH_UnitOfMeasure          as
         select from alfa02.materials.UnitOfMeasures {
             ID          as Code,
             Description as Text

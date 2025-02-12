@@ -22,7 +22,7 @@ type Dec         : Decimal(16, 2);
 
 context materials {
 
-    entity Products : cuid {
+    entity Products : cuid, managed {
         //key ID               : UUID;
         Name             : localized String not null;
         Description      : localized String;
@@ -43,11 +43,13 @@ context materials {
                                on SalesData.Product = $self;
         Reviews          : Association to many ProductReview
                                on Reviews.Product = $self;
+        
     };
 
     entity Categories {
-        key ID   : String(1);
-            Name : localized String;
+        key ID      : String(1);
+            Name    : localized String;
+            //Product : Association to Products;
     };
 
     entity StockAvailability {
@@ -59,6 +61,7 @@ context materials {
     entity Currencies {
         key ID          : String(3);
             Description : localized String;
+            Product     : Association to Products;
     };
 
     entity UnitOfMeasures {
@@ -129,6 +132,12 @@ context sales {
                       on Product.Supplier = $self;
     };
 
+    entity Months {
+        key ID               : String(2);
+            Description      : localized String;
+            ShortDescription : localized String(3);
+    };
+
     entity SelProducts1 as
         select from materials.Products {
             *
@@ -156,7 +165,7 @@ context sales {
         order by
             Rating;
 
-    entity SalesData : cuid {
+    entity SalesData : cuid, managed {
         //key ID           : UUID;
         DeliveryDate : DateTime;
         Revenue      : Decimal(16, 2);
@@ -165,11 +174,7 @@ context sales {
         DeliveryMoth : Association to Months;
     };
 
-    entity Months {
-        key ID               : String(2);
-            Description      : localized String;
-            ShortDescription : localized String(3);
-    };
+    
 
 }
 
@@ -192,7 +197,6 @@ context reports {
             ToAverageRating    : Association to AverageRating
                                      on ToAverageRating.ProductId = ID;
         }
-
         into {
             *,
             ToAverageRating.AverageRating as Rating,
